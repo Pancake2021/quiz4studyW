@@ -63,8 +63,11 @@
 
     <script>
         if (window.Telegram?.WebApp) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
+            const tg = Telegram.WebApp;
+            tg.ready();
+            tg.expand();
+            tg.setBackgroundColor('#0f0f13');
+            tg.setHeaderColor('#0f0f13');
         }
 
         // ─── Load data ───────────────────────────────────────────────────────────

@@ -1,12 +1,12 @@
 :root {
-  /* Telegram-aware colors */
-  --tg-bg: var(--tg-theme-bg-color, #0f0f13);
-  --tg-text: var(--tg-theme-text-color, #ffffff);
-  --tg-hint: var(--tg-theme-hint-color, #8b8fa8);
-  --tg-link: var(--tg-theme-link-color, #3b82f6);
-  --tg-button: var(--tg-theme-button-color, #3b82f6);
-  --tg-button-text: var(--tg-theme-button-text-color, #ffffff);
-  --tg-secondary-bg: var(--tg-theme-secondary-bg-color, #1a1a24);
+  /* Fixed dark colors — NOT using tg-theme vars (they break in light Telegram themes) */
+  --tg-bg: #0f0f13;
+  --tg-text: #ffffff;
+  --tg-hint: #8b8fa8;
+  --tg-link: #3b82f6;
+  --tg-button: #3b82f6;
+  --tg-button-text: #ffffff;
+  --tg-secondary-bg: #1a1a24;
 
   /* Custom tokens */
   --surface: #1a1a24;
@@ -43,7 +43,9 @@
 }
 
 /* ─── Reset ─────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -58,8 +60,8 @@ html {
 
 body {
   min-height: 100%;
-  background: var(--tg-bg, #0f0f13);
-  color: var(--tg-text, #ffffff);
+  background: #0f0f13 !important;
+  color: #ffffff !important;
   font-family: var(--font);
   font-weight: var(--fw-normal);
   line-height: 1.5;
@@ -67,9 +69,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: inherit; text-decoration: none; }
-button { border: none; background: none; cursor: pointer; font-family: inherit; }
-img { display: block; max-width: 100%; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
 
 /* ─── Layout ─────────────────────────────── */
 .app {
@@ -110,7 +125,9 @@ img { display: block; max-width: 100%; }
   transition: background var(--duration) var(--ease);
 }
 
-.header-back:active { background: var(--surface-2); }
+.header-back:active {
+  background: var(--surface-2);
+}
 
 .header-title {
   font-size: 18px;
@@ -141,8 +158,15 @@ img { display: block; max-width: 100%; }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 .hero-title {
@@ -176,10 +200,12 @@ img { display: block; max-width: 100%; }
   border: 1px solid var(--border);
   overflow: hidden;
   transition: transform var(--duration) var(--ease),
-              box-shadow var(--duration) var(--ease);
+    box-shadow var(--duration) var(--ease);
 }
 
-.card:active { transform: scale(0.98); }
+.card:active {
+  transform: scale(0.98);
+}
 
 /* Specialty card */
 .specialty-card {
@@ -213,7 +239,10 @@ img { display: block; max-width: 100%; }
   background: var(--card-gradient);
 }
 
-.specialty-card .info { flex: 1; }
+.specialty-card .info {
+  flex: 1;
+}
+
 .specialty-card .name {
   font-size: 16px;
   font-weight: var(--fw-semibold);
@@ -284,7 +313,7 @@ img { display: block; max-width: 100%; }
 }
 
 /* Divider inside card stack */
-.card-list .card + .card {
+.card-list .card+.card {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: 1px solid var(--border);
@@ -315,11 +344,15 @@ img { display: block; max-width: 100%; }
   flex-shrink: 0;
 }
 
-.mode-card .mode-info { flex: 1; }
+.mode-card .mode-info {
+  flex: 1;
+}
+
 .mode-card .mode-name {
   font-size: 15px;
   font-weight: var(--fw-semibold);
 }
+
 .mode-card .mode-desc {
   font-size: 13px;
   color: var(--tg-hint);
@@ -365,11 +398,22 @@ img { display: block; max-width: 100%; }
   border-radius: 100px;
 }
 
-.timer-badge.urgent { color: var(--red); background: var(--red-dim); animation: pulse 1s infinite; }
+.timer-badge.urgent {
+  color: var(--red);
+  background: var(--red-dim);
+  animation: pulse 1s infinite;
+}
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* Question card */
@@ -406,15 +450,23 @@ img { display: block; max-width: 100%; }
 }
 
 /* Answer reveal sections */
-.hint-block, .answer-block {
+.hint-block,
+.answer-block {
   border-radius: var(--radius-sm);
   padding: 14px 16px;
   animation: slideDown 0.25s var(--ease);
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hint-block {
@@ -434,7 +486,7 @@ img { display: block; max-width: 100%; }
 .hint-text {
   font-size: 14px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
+  color: #d4c79a;
 }
 
 .answer-block {
@@ -454,7 +506,7 @@ img { display: block; max-width: 100%; }
 .answer-text {
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: #e2e8f0;
   white-space: pre-line;
 }
 
@@ -490,12 +542,15 @@ img { display: block; max-width: 100%; }
   font-size: 16px;
   font-weight: var(--fw-semibold);
   transition: transform var(--duration) var(--ease),
-              opacity var(--duration) var(--ease);
+    opacity var(--duration) var(--ease);
   cursor: pointer;
   width: 100%;
 }
 
-.btn:active { transform: scale(0.97); opacity: 0.85; }
+.btn:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
 
 .btn-know {
   background: var(--green);
@@ -550,8 +605,15 @@ img { display: block; max-width: 100%; }
 }
 
 @keyframes popIn {
-  from { transform: scale(0); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .results-title {
@@ -592,14 +654,37 @@ img { display: block; max-width: 100%; }
   color: var(--tg-hint);
 }
 
-.stat-card.green { border-color: rgba(34, 197, 94, 0.3); }
-.stat-card.green .stat-value { color: var(--green); }
-.stat-card.red { border-color: rgba(239, 68, 68, 0.3); }
-.stat-card.red .stat-value { color: var(--red); }
-.stat-card.blue { border-color: rgba(59, 130, 246, 0.3); }
-.stat-card.blue .stat-value { color: var(--blue); }
-.stat-card.yellow { border-color: rgba(245, 158, 11, 0.3); }
-.stat-card.yellow .stat-value { color: var(--yellow); }
+.stat-card.green {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.stat-card.green .stat-value {
+  color: var(--green);
+}
+
+.stat-card.red {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.stat-card.red .stat-value {
+  color: var(--red);
+}
+
+.stat-card.blue {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.stat-card.blue .stat-value {
+  color: var(--blue);
+}
+
+.stat-card.yellow {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stat-card.yellow .stat-value {
+  color: var(--yellow);
+}
 
 /* ─── Skeleton loading ───────────────────── */
 .skeleton {
@@ -610,19 +695,39 @@ img { display: block; max-width: 100%; }
 }
 
 @keyframes shimmer {
-  from { background-position: 200% 0; }
-  to   { background-position: -200% 0; }
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
 }
 
 /* ─── Utils ──────────────────────────────── */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
-.text-hint { color: var(--tg-hint); }
-.text-green { color: var(--green); }
-.text-red { color: var(--red); }
-.text-blue { color: var(--blue); }
+.text-hint {
+  color: var(--tg-hint);
+}
 
-.mt-auto { margin-top: auto; }
+.text-green {
+  color: var(--green);
+}
+
+.text-red {
+  color: var(--red);
+}
+
+.text-blue {
+  color: var(--blue);
+}
+
+.mt-auto {
+  margin-top: auto;
+}
 
 /* ─── Transitions between screens ───────── */
 .screen-transition {
@@ -630,6 +735,13 @@ img { display: block; max-width: 100%; }
 }
 
 @keyframes screenIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

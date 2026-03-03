@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -11,6 +12,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
   <div class="app">
     <div class="screen screen-transition" id="home-screen">
@@ -36,8 +38,12 @@
   <script>
     // Init Telegram WebApp if available
     if (window.Telegram?.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
+      const tg = Telegram.WebApp;
+      tg.ready();
+      tg.expand();
+      // Force dark theme regardless of user's Telegram theme
+      tg.setBackgroundColor('#0f0f13');
+      tg.setHeaderColor('#0f0f13');
     }
 
     // Load config and render specialties
@@ -65,9 +71,9 @@
             <div class="desc">${s.description}</div>
           </div>
           ${s.available
-            ? '<div class="arrow">›</div>'
-            : '<span class="badge-coming">Скоро</span>'
-          }
+          ? '<div class="arrow">›</div>'
+          : '<span class="badge-coming">Скоро</span>'
+        }
         </div>
       `).join('');
     }
@@ -85,4 +91,5 @@
     loadSpecialties();
   </script>
 </body>
+
 </html>
