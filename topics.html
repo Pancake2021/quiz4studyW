@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Выбор темы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <div class="app">
+        <div class="screen screen-transition">
+
+            <!-- Header -->
+            <div class="header">
+                <a href="index.html" class="header-back">‹</a>
+                <div>
+                    <div class="header-title" id="specialty-title">Загрузка...</div>
+                    <div class="header-sub" id="specialty-sub"></div>
+                </div>
+            </div>
+
+            <!-- Test modes -->
+            <p class="section-label">Режим теста</p>
+            <div class="card-list">
+
+                <div class="card mode-card" id="mode-sprint" onclick="startSprint()">
+                    <div class="mode-icon" style="background: var(--yellow-dim)">⚡</div>
+                    <div class="mode-info">
+                        <div class="mode-name">Спринт 10 минут</div>
+                        <div class="mode-desc">Случайные вопросы из всех тем</div>
+                    </div>
+                    <div class="arrow text-hint">›</div>
+                </div>
+
+                <div class="card mode-card" id="mode-full" onclick="startFull()">
+                    <div class="mode-icon" style="background: var(--blue-dim)">📚</div>
+                    <div class="mode-info">
+                        <div class="mode-name">Все вопросы</div>
+                        <div class="mode-desc" id="full-count">Пройти весь банк вопросов</div>
+                    </div>
+                    <div class="arrow text-hint">›</div>
+                </div>
+
+            </div>
+
+            <!-- Topics by category -->
+            <p class="section-label">По теме</p>
+            <div class="card-list" id="topics-list">
+                <!-- Rendered by JS -->
+                <div class="card topic-card skeleton" style="height:52px"></div>
+                <div class="card topic-card skeleton" style="height:52px; margin-top:1px"></div>
+                <div class="card topic-card skeleton" style="height:52px; margin-top:1px"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        if (window.Telegram?.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+
+        // ─── Load data ───────────────────────────────────────────────────────────
+        let _allQuestions = [];
+        let _specialty = null;
+
+        async function init() {
+            const raw = sessionStorage.getItem('specialty');
+            if (!raw) { window.location.href = 'index.html'; return; }
+
+            _specialty = JSON.parse(raw);
+            document.getElementById('specialty-title').textContent = _specialty.name;
+
+            try {
+                const res = await fetch(_specialty.dataFile);
+                const data = await res.json();
+                _allQuestions = data.questions;
+
+                document.getElementById('specialty-sub').textContent =
+                    `${_allQuestions.length} вопросов`;
+                document.getElementById('full-count').textContent =
+                    `${_allQuestions.length} вопросов · все темы`;
+
+                renderTopics(_allQuestions);
+            } catch (e) {
+                document.getElementById('topics-list').innerHTML =
+                    '<p style="padding:20px;color:var(--tg-hint);text-align:center">Не удалось загрузить вопросы</p>';
+            }
+        }
+
+        // ─── Render topic list ───────────────────────────────────────────────────
+        function renderTopics(questions) {
+            // Group by category
+            const groups = {};
+            questions.forEach(q => {
+                if (!groups[q.category]) groups[q.category] = [];
+                groups[q.category].push(q);
+            });
+
+            const list = document.getElementById('topics-list');
+            list.innerHTML = Object.entries(groups).map(([cat, qs]) => `
+        <div class="card topic-card" onclick="startByTopic(${JSON.stringify(cat).replace(/"/g, '&quot;')})">
+          <div class="topic-dot"></div>
+          <div class="topic-name">${cat}</div>
+          <span class="topic-count">${qs.length}</span>
+          <div class="arrow text-hint">›</div>
+        </div>
+      `).join('');
+        }
+
+        // ─── Start modes ─────────────────────────────────────────────────────────
+        function startSprint() {
+            // Shuffle all, take up to 30 for sprint, set timer
+            const shuffled = shuffle([..._allQuestions]).slice(0, 30);
+            saveQuizSession(shuffled, 'sprint', 'Спринт 10 минут');
+            window.location.href = 'quiz.html';
+        }
+
+        function startFull() {
+            saveQuizSession([..._allQuestions], 'full', 'Все вопросы');
+            window.location.href = 'quiz.html';
+        }
+
+        function startByTopic(categoryName) {
+            const filtered = _allQuestions.filter(q => q.category === categoryName);
+            saveQuizSession(filtered, 'topic', categoryName);
+            window.location.href = 'quiz.html';
+        }
+
+        function saveQuizSession(questions, mode, categoryName) {
+            sessionStorage.setItem('quiz_session', JSON.stringify({
+                questions,
+                mode,
+                categoryName,
+                specialtyId: _specialty.id,
+            }));
+        }
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

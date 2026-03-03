@@ -1,0 +1,34 @@
+{
+    "specialties": [
+        {
+            "id": "python",
+            "name": "Python",
+            "description": "Типы данных, ООП, многопоточность и другие темы",
+            "icon": "🐍",
+            "color": "#3B82F6",
+            "gradient": "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)",
+            "available": true,
+            "dataFile": "data/python/questions.json"
+        },
+        {
+            "id": "sql",
+            "name": "SQL",
+            "description": "Базы данных, запросы, оптимизация",
+            "icon": "🗄️",
+            "color": "#8B5CF6",
+            "gradient": "linear-gradient(135deg, #2e1065 0%, #7c3aed 100%)",
+            "available": false,
+            "dataFile": "data/sql/questions.json"
+        },
+        {
+            "id": "algorithms",
+            "name": "Алгоритмы",
+            "description": "Сортировки, деревья, графы, сложность",
+            "icon": "⚡",
+            "color": "#F59E0B",
+            "gradient": "linear-gradient(135deg, #451a03 0%, #d97706 100%)",
+            "available": false,
+            "dataFile": "data/algorithms/questions.json"
+        }
+    ]
+}

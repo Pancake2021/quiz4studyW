@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Тренажёр — выбор специальности</title>
+  <meta name="description" content="Интерактивный тренажёр по техническим дисциплинам: Python, SQL, алгоритмы" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="app">
+    <div class="screen screen-transition" id="home-screen">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-icon">🎓</div>
+        <h1 class="hero-title">Тренажёр</h1>
+        <p class="hero-sub">Выбери специальность и прокачай свои знания</p>
+      </div>
+
+      <!-- Specialties list -->
+      <p class="section-label">Специальности</p>
+      <div class="card-list" id="specialties-list">
+        <!-- Rendered by JS -->
+        <div class="card specialty-card skeleton" style="height:80px"></div>
+        <div class="card specialty-card skeleton" style="height:80px; margin-top:1px"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Init Telegram WebApp if available
+    if (window.Telegram?.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
+
+    // Load config and render specialties
+    async function loadSpecialties() {
+      try {
+        const res = await fetch('data/config.json');
+        const cfg = await res.json();
+        renderSpecialties(cfg.specialties);
+      } catch (e) {
+        document.getElementById('specialties-list').innerHTML =
+          '<p style="padding:20px;color:var(--tg-hint);text-align:center">Не удалось загрузить данные</p>';
+      }
+    }
+
+    function renderSpecialties(specialties) {
+      const list = document.getElementById('specialties-list');
+      list.innerHTML = specialties.map(s => `
+        <div class="card specialty-card ${s.available ? '' : 'unavailable'}"
+             style="--card-gradient: ${s.gradient}"
+             id="specialty-${s.id}"
+             ${s.available ? `onclick="goToTopics('${s.id}', '${s.name}', '${encodeURIComponent(s.dataFile)}')"` : ''}>
+          <div class="icon-wrap" style="background: ${s.gradient}">${s.icon}</div>
+          <div class="info">
+            <div class="name">${s.name}</div>
+            <div class="desc">${s.description}</div>
+          </div>
+          ${s.available
+            ? '<div class="arrow">›</div>'
+            : '<span class="badge-coming">Скоро</span>'
+          }
+        </div>
+      `).join('');
+    }
+
+    function goToTopics(id, name, fileEncoded) {
+      // Store in sessionStorage for topics page
+      sessionStorage.setItem('specialty', JSON.stringify({
+        id,
+        name,
+        dataFile: decodeURIComponent(fileEncoded),
+      }));
+      window.location.href = 'topics.html';
+    }
+
+    loadSpecialties();
+  </script>
+</body>
+</html>

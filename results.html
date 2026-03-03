@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Результаты</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <div class="app">
+        <div class="screen screen-transition">
+
+            <!-- Result hero -->
+            <div class="results-hero">
+                <div class="results-emoji" id="result-emoji">🎉</div>
+                <div class="results-title" id="result-title">Тест завершён!</div>
+                <div class="results-sub" id="result-sub"></div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="stats-grid">
+                <div class="stat-card green">
+                    <div class="stat-value" id="stat-knew">0</div>
+                    <div class="stat-label">Знал сам</div>
+                </div>
+                <div class="stat-card yellow">
+                    <div class="stat-value" id="stat-hinted">0</div>
+                    <div class="stat-label">Вспомнил с подсказкой</div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-value" id="stat-didnt">0</div>
+                    <div class="stat-label">Не знал</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-value" id="stat-pct">0%</div>
+                    <div class="stat-label">Знает</div>
+                </div>
+            </div>
+
+            <!-- Category info -->
+            <div class="card" style="padding: 14px 16px; text-align:center; color: var(--tg-hint); font-size:14px;">
+                Тема: <span id="result-category" style="color:var(--tg-text)">—</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn btn-primary" onclick="repeatQuiz()">
+                    🔄 Повторить тест
+                </button>
+                <button class="btn btn-secondary" onclick="goToTopics()">
+                    ← Выбрать другую тему
+                </button>
+                <button class="btn btn-ghost" onclick="goHome()">
+                    На главную
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        if (window.Telegram?.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+
+        function init() {
+            const raw = sessionStorage.getItem('quiz_results');
+            if (!raw) { window.location.href = 'index.html'; return; }
+
+            const r = JSON.parse(raw);
+
+            // Emoji based on score
+            const emojis = [
+                { min: 80, emoji: '🏆', title: 'Отличный результат!' },
+                { min: 60, emoji: '💪', title: 'Хороший результат!' },
+                { min: 40, emoji: '📖', title: 'Есть над чем поработать' },
+                { min: 0, emoji: '🔥', title: 'Продолжай практиковаться!' },
+            ];
+            const match = emojis.find(e => r.knewPct >= e.min);
+
+            document.getElementById('result-emoji').textContent = match.emoji;
+            document.getElementById('result-title').textContent = match.title;
+            document.getElementById('result-sub').textContent =
+                `Пройдено вопросов: ${r.total}`;
+
+            document.getElementById('stat-knew').textContent = r.knew;
+            document.getElementById('stat-hinted').textContent = r.hinted;
+            document.getElementById('stat-didnt').textContent = r.didntKnow;
+            document.getElementById('stat-pct').textContent = r.knewPct + '%';
+            document.getElementById('result-category').textContent = r.categoryName || '—';
+        }
+
+        function repeatQuiz() {
+            // Re-use same quiz session
+            window.location.href = 'quiz.html';
+        }
+
+        function goToTopics() {
+            window.location.href = 'topics.html';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

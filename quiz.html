@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Тест</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <div class="app">
+        <div class="screen screen-transition" id="quiz-screen">
+
+            <!-- Top: progress + timer -->
+            <div class="quiz-progress">
+                <div class="progress-info">
+                    <span>
+                        Вопрос <span id="quiz-current">1</span>
+                        из <span id="quiz-total">?</span>
+                    </span>
+                    <div id="timer-wrap" class="hidden">
+                        <span class="timer-badge" id="quiz-timer">10:00</span>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+
+            <!-- Question card -->
+            <div class="question-card" id="question-card">
+                <!-- Category badge -->
+                <div>
+                    <span class="question-category" id="quiz-category">Загрузка...</span>
+                </div>
+
+                <!-- Question -->
+                <p class="question-text" id="quiz-question">...</p>
+
+                <!-- Hint block (hidden initially) -->
+                <div id="hint-block" class="hint-block hidden">
+                    <div class="hint-label">💡 Подсказка</div>
+                    <p class="hint-text" id="hint-text"></p>
+                </div>
+
+                <!-- Answer block (hidden initially) -->
+                <div id="answer-block" class="answer-block hidden">
+                    <div class="answer-label">✅ Ответ</div>
+                    <p class="answer-text" id="answer-text"></p>
+                    <div id="code-wrap" class="hidden"></div>
+                </div>
+            </div>
+
+            <!-- ─── Actions: initial (before any reveal) ─── -->
+            <div class="actions" id="actions-initial">
+                <button class="btn btn-know" id="btn-know" onclick="QuizEngine.onKnow()">
+                    ✓ Я знаю
+                </button>
+                <button class="btn btn-hint" id="btn-hint" onclick="QuizEngine.onHint()">
+                    💡 Подсказка
+                </button>
+                <button class="btn btn-dont-know" id="btn-dont-know" onclick="QuizEngine.onDontKnow()">
+                    ✗ Не знаю
+                </button>
+            </div>
+
+            <!-- ─── Actions: after hint (choose to admit or answer) ─── -->
+            <div class="actions hidden" id="actions-after-hint">
+                <button class="btn btn-know" onclick="QuizEngine.onHintThenKnow()">
+                    ✓ Теперь вспомнил
+                </button>
+                <button class="btn btn-dont-know" onclick="QuizEngine.onHintThenDontKnow()">
+                    ✗ Всё равно не знаю
+                </button>
+            </div>
+
+            <!-- ─── Actions: after answer shown ─── -->
+            <div class="actions hidden" id="actions-after-answer">
+                <button class="btn btn-next" onclick="QuizEngine.onNext()">
+                    <span id="next-btn-label">Следующий вопрос →</span>
+                </button>
+            </div>
+
+            <!-- Exit link -->
+            <button class="btn btn-ghost" onclick="confirmExit()">Завершить тест</button>
+
+        </div>
+    </div>
+
+    <script src="js/quiz.js"></script>
+    <script>
+        if (window.Telegram?.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+
+        // ─── Bootstrap ────────────────────────────────────────────────────────────
+        function bootstrap() {
+            const raw = sessionStorage.getItem('quiz_session');
+            if (!raw) { window.location.href = 'index.html'; return; }
+
+            const session = JSON.parse(raw);
+            QuizEngine.init(
+                session.questions,
+                session.mode,
+                {
+                    specialtyId: session.specialtyId,
+                    categoryName: session.categoryName,
+                }
+            );
+        }
+
+        // ─── Confirm exit ─────────────────────────────────────────────────────────
+        function confirmExit() {
+            const ok = confirm('Завершить тест? Прогресс будет сохранён.');
+            if (ok) window.location.href = 'topics.html';
+        }
+
+        bootstrap();
+    </script>
+</body>
+
+</html>
