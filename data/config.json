@@ -29,6 +29,16 @@
             "gradient": "linear-gradient(135deg, #451a03 0%, #d97706 100%)",
             "available": false,
             "dataFile": "data/algorithms/questions.json"
+        },
+        {
+            "id": "ml",
+            "name": "Classic ML",
+            "description": "Регрессия, классификация, деревья, ансамбли, метрики",
+            "icon": "🤖",
+            "color": "#10B981",
+            "gradient": "linear-gradient(135deg, #064e3b 0%, #059669 100%)",
+            "available": true,
+            "dataFile": "data/ml/questions.json"
         }
     ]
 }
