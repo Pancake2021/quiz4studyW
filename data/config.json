@@ -39,6 +39,16 @@
             "gradient": "linear-gradient(135deg, #064e3b 0%, #059669 100%)",
             "available": true,
             "dataFile": "data/ml/questions.json"
+        },
+        {
+            "id": "dl",
+            "name": "Deep Learning",
+            "description": "Нормализация, оптимизаторы, регуляризация и обучение нейросетей",
+            "icon": "🧠",
+            "color": "#F97316",
+            "gradient": "linear-gradient(135deg, #7c2d12 0%, #ea580c 100%)",
+            "available": true,
+            "dataFile": "data/dl/questions.json"
         }
     ]
 }
